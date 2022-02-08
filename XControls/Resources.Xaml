@@ -118,31 +118,6 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
     </Style>
-    <Style x:Key="NR_TEXTBOX" TargetType="TextBox">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="#007ACC"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TextBox">
-                    <Border Name="border" CornerRadius="3,3,3,3"
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                Background="{TemplateBinding Background}" 
-                                SnapsToDevicePixels="true">
-                        <ScrollViewer Name="PART_ContentHost" Background="{TemplateBinding Background}" 
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Value="{StaticResource DisabledBackgroundBrush}" Property="Background" />
-                            <Setter Value="{StaticResource DisabledForegroundBrush}" Property="Foreground" />
-                            <Setter TargetName="PART_ContentHost" Property="Background" Value="White"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
     <Style x:Key="XTEXTBOX" TargetType="TextBox">
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="#007ACC"/>

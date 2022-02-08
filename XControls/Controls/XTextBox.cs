@@ -10,84 +10,281 @@ namespace XControls.Controls
     public class XTextBox : TextBox, IXControl
     {
         public bool HasPlaceHolder { get; set; }
-        public bool ShouldFlash { get; set; } = true;
-        public Label PlaceHolderText_LabelReference { get; set; }
 
         public XTextBox()
         {
             ControlRegistry.Register(this);
-            Style = (Style)FindResource("XTEXTBOX");
+            Foreground = new SolidColorBrush(theme.NormalForeground);
+            BorderBrush = new SolidColorBrush(theme.NormalBorderBrush);
+            Background = new SolidColorBrush(theme.NormalBackground);
+            SetupEvents();
+            Update();
 
-            MouseEnter += XOnMouseEnter;
-            MouseLeave += XOnMouseLeave;
-            GotFocus += XOnGotFocus;
-            LostFocus += XOnLoseFocus;
-            TextChanged += XOnTextChanged;
+            Style = (System.Windows.Style)FindResource("XTEXTBOX");
 
             VerticalContentAlignment = VerticalAlignment.Center;
             BorderThickness = new Thickness(0, 0, 0, 0);
             FontSize = 14;
             FontWeight = FontWeights.Bold;
             FontFamily = new FontFamily("Global User Interface");
-
-            Foreground = new SolidColorBrush(ColorContainer.Foreground);
-            BorderBrush = new SolidColorBrush(ColorContainer.Foreground);
-            Background = new SolidColorBrush(ColorContainer.Background);
-            SelectionBrush = new SolidColorBrush(ColorContainer.Foreground);
         }
 
-        private void XOnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+
+        #region XCONTROL
+        private ColorTheme theme;
+        public ColorTheme Theme { get { return theme; } set { theme = value; } }
+        public ControlState CurrentState { get; protected set; }
+        public bool HandleColors { get; set; } = true;
+        public void RemoveFocus()
         {
-            BorderThickness = new Thickness(2, 0, 0, BorderThickness.Bottom);
-            if (!ShouldFlash)
-                ColorTransitioner.TextBoxTransitioner.Foreground(this, ColorContainer.GlowForeground);
-            ColorTransitioner.TextBoxTransitioner.BorderBrush(this, ColorContainer.GlowForeground);
-            ColorTransitioner.TextBoxTransitioner.Background(this, ColorContainer.Background);
-            ColorTransitioner.TextBoxTransitioner.SelectionBrush(this, ColorContainer.GlowForeground);
-        }
-        private void XOnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            BorderThickness = new Thickness(0, 0, 0, BorderThickness.Bottom);
-            if (!ShouldFlash)
-                ColorTransitioner.TextBoxTransitioner.Foreground(this, ColorContainer.Foreground);
-            ColorTransitioner.TextBoxTransitioner.BorderBrush(this, ColorContainer.Foreground);
-            ColorTransitioner.TextBoxTransitioner.Background(this, ColorContainer.Background);
-            ColorTransitioner.TextBoxTransitioner.SelectionBrush(this, ColorContainer.Foreground);
-        }
-        private void XOnGotFocus(object sender, RoutedEventArgs e)
-        {
-            BorderThickness = new Thickness(BorderThickness.Left, 0, 0, 2);
-        }
-        private void XOnLoseFocus(object sender, RoutedEventArgs e)
-        {
-            BorderThickness = new Thickness(BorderThickness.Left, 0, 0, 0);
-        }
-        private void XOnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ShouldFlash)            
-                ColorTransitioner.TextBoxTransitioner.Foreground(this, ColorContainer.Foreground, ColorContainer.GlowForeground, 1000);            
-            if (Text == string.Empty)
+            switch (CurrentState)
             {
-                if (PlaceHolderText_LabelReference != null)
-                    PlaceHolderText_LabelReference.Visibility = Visibility.Visible;
+                default:
+                case ControlState.Invalid:
+                    CurrentState = ControlState.Normal;
+                    break;
+                case ControlState.Normal:
+                    CurrentState = ControlState.Normal;
+                    break;
+                case ControlState.Hovered:
+                    CurrentState = ControlState.Hovered;
+                    break;
+                case ControlState.Pressed:
+                    CurrentState = ControlState.Pressed;
+                    break;
+                case ControlState.Focused:
+                    CurrentState = ControlState.Normal;
+                    break;
+                case ControlState.Disabled:
+                    CurrentState = ControlState.Disabled;
+                    break;
             }
-            else if (PlaceHolderText_LabelReference != null)
-                PlaceHolderText_LabelReference.Visibility = Visibility.Hidden;
-        }
-
-        public void SetPlaceHolderLabel(Label lbl)
-        {
-            PlaceHolderText_LabelReference = lbl;
-            HasPlaceHolder = true;
+            Update();
         }
 
         public void Update()
         {
-            if (!ShouldFlash)
-                ColorTransitioner.TextBoxTransitioner.Foreground(this, ColorContainer.Foreground);
-            ColorTransitioner.TextBoxTransitioner.BorderBrush(this, ColorContainer.Foreground);
-            ColorTransitioner.TextBoxTransitioner.Background(this, ColorContainer.Background);
-            ColorTransitioner.TextBoxTransitioner.SelectionBrush(this, ColorContainer.Foreground);
+            if (!HandleColors) return;
+
+
+            switch (CurrentState)
+            {
+                default:
+                case ControlState.Invalid:
+                case ControlState.Normal:
+                    {
+                        ColorTransitioner.TextBoxTransitioner.Foreground(this, theme.NormalForeground);
+                        ColorTransitioner.TextBoxTransitioner.BorderBrush(this, theme.NormalBorderBrush);
+                        ColorTransitioner.TextBoxTransitioner.Background(this, theme.NormalBackground);
+                    }
+                    break;
+                case ControlState.Hovered:
+                    {
+                        ColorTransitioner.TextBoxTransitioner.Foreground(this, theme.HoverForeground);
+                        ColorTransitioner.TextBoxTransitioner.BorderBrush(this, theme.HoverBorderBrush);
+                        ColorTransitioner.TextBoxTransitioner.Background(this, theme.HoverBackground);
+                    }
+                    break;
+                case ControlState.Pressed:
+                    {
+                        ColorTransitioner.TextBoxTransitioner.Foreground(this, theme.PressedForeground);
+                        ColorTransitioner.TextBoxTransitioner.BorderBrush(this, theme.PressedBorderBrush);
+                        ColorTransitioner.TextBoxTransitioner.Background(this, theme.PressedBackground);
+                    }
+                    break;
+                case ControlState.Focused:
+                    {
+                        ColorTransitioner.TextBoxTransitioner.Foreground(this, theme.FocusedForeground);
+                        ColorTransitioner.TextBoxTransitioner.BorderBrush(this, theme.FocusedBorderBrush);
+                        ColorTransitioner.TextBoxTransitioner.Background(this, theme.FocusedBackground);
+                    }
+                    break;
+                case ControlState.Disabled:
+                    {
+                        ColorTransitioner.TextBoxTransitioner.Foreground(this, theme.DisabledForeground);
+                        ColorTransitioner.TextBoxTransitioner.BorderBrush(this, theme.DisabledBorderBrush);
+                        ColorTransitioner.TextBoxTransitioner.Background(this, theme.DisabledBackground);
+                    }
+                    break;
+            }
         }
+
+        public ControlState GetState()
+        {
+            return CurrentState;
+        }
+
+        public void SetupEvents()
+        {
+            MouseEnter += (sender, e) =>
+            {
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal:
+                    case ControlState.Hovered:
+                        CurrentState = ControlState.Hovered;
+                        break;
+                    case ControlState.Pressed:
+                        CurrentState = ControlState.Pressed;
+                        break;
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Focused;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            MouseLeave += (sender, e) =>
+            {
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal:
+                    case ControlState.Hovered:
+                        CurrentState = ControlState.Normal;
+                        break;
+                    case ControlState.Pressed:
+                        CurrentState = ControlState.Pressed;
+                        break;
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Focused;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            MouseDown += (sender, e) =>
+            {
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal:
+                    case ControlState.Hovered:
+                    case ControlState.Pressed:
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Pressed;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            PreviewMouseDown += (sender, e) =>
+            {
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal:
+                    case ControlState.Hovered:
+                    case ControlState.Pressed:
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Pressed;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            MouseUp += (sender, e) =>
+            {
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal: // Impossible Case
+                    case ControlState.Hovered:
+                        CurrentState = ControlState.Normal;
+                        break;
+                    case ControlState.Pressed:
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Focused;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            PreviewMouseUp += (sender, e) =>
+            {
+                return;
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal: // Impossible Case
+                    case ControlState.Hovered:
+                        CurrentState = ControlState.Normal;
+                        break;
+                    case ControlState.Pressed:
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Focused;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            GotFocus += (sender, e) =>
+            {
+                ControlRegistry.UnFocus(this);
+                BorderThickness = new Thickness(0, 0, 0, 2);
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal:
+                    case ControlState.Hovered:
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Focused;
+                        break;
+                    case ControlState.Pressed:
+                        CurrentState = ControlState.Pressed;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+            LostFocus += (sender, e) =>
+            {
+                BorderThickness = new Thickness(0, 0, 0, 0);
+                switch (CurrentState)
+                {
+                    default:
+                    case ControlState.Invalid:
+                    case ControlState.Normal:
+                        CurrentState = ControlState.Normal;
+                        break;
+                    case ControlState.Hovered:
+                        CurrentState = ControlState.Hovered;
+                        break;
+                    case ControlState.Pressed:
+                        CurrentState = ControlState.Pressed;
+                        break;
+                    case ControlState.Focused:
+                        CurrentState = ControlState.Normal;
+                        break;
+                    case ControlState.Disabled:
+                        CurrentState = ControlState.Disabled;
+                        break;
+                }
+                Update();
+            };
+        }
+        #endregion
     }
 }

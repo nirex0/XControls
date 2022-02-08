@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="XControls.Controls.LabeledDataGridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:XControls.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Width="425" Foreground="{x:Null}">
+    <Grid>
+        <local:XLabel  x:Name="label" HorizontalContentAlignment="Center" Content="Label" Background="#3F7D7DFF"       VerticalAlignment="Top"/>
+        <Grid Margin="0,32,0,0">
+            <DataGrid x:Name="datagrid" SelectionUnit="FullRow" SelectionMode="Single" 
+                                  RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}" 
+                                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                                  RowStyle="{StaticResource DataGridRowStyle}"
+                                  CellStyle="{StaticResource DataGridCell}"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  HorizontalGridLinesBrush="#FF1F2129" VerticalGridLinesBrush="#FF1F2129" 
+                                  AreRowDetailsFrozen="True" IsSynchronizedWithCurrentItem="True" CanUserAddRows="False"
+                                  BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Background="sc#1, 0.00604883349, 0.007499032, 0.0129830325" Foreground="#8c72ff" 
+                                  AutoGenerateColumns="False" BorderThickness="0,0,0,0"
+                                 >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="180" Header=" Title" Binding="{Binding Title}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="180" Header=" Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+    </Grid>
+</UserControl>
