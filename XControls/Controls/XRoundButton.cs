@@ -12,7 +12,7 @@ namespace XControls.Controls
     {
         public XRoundButton()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XROUND_BUTTON");
 
             MouseEnter += OnMouseEnterX;

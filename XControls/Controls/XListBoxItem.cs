@@ -14,7 +14,7 @@ namespace XControls.Controls
 
         public XListBoxItem()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XLISTBOXITEM");
 
             Selected += OnSelectedX;

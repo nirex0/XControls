@@ -15,7 +15,7 @@ namespace XControls.Controls
 
         public XLabel()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
 
             MouseEnter += OnMouseEnterX;
             MouseLeave += OnMouseLeaveX;

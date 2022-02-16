@@ -15,7 +15,7 @@ namespace XControls.Controls
 
         public XTextBox()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XTEXTBOX");
 
             MouseEnter += XOnMouseEnter;

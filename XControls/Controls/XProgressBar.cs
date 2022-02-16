@@ -14,7 +14,7 @@ namespace XControls.Controls
 
         public XProgressBar()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XPROGRESSBAR");
 
             MouseEnter += OnMouseEnterX;

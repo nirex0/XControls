@@ -16,7 +16,7 @@ namespace XControls.Controls
 
         public XListBox()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XLISTBOX");
 
             MouseEnter += OnMouseEnterX;

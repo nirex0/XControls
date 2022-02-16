@@ -35,7 +35,7 @@ namespace XControls.Controls
 
         public XRoundSwitch()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XROUNDSWITCH");
 
             MouseEnter += OnMouseEnterX;

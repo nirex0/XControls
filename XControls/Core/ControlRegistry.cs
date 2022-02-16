@@ -1,20 +1,28 @@
 ﻿// By Nirex @ github.com/nirex0
 
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace XControls.Core
 {
-    public static class ControlRegistry
+    public class ControlRegistry
     {
-        public static List<IXControl> Controls { get; private set; } = new();
-        public static bool Register(IXControl control)
+        public List<IXControl> Controls { get; private set; }
+
+        public ControlRegistry()
+        {
+            Controls = new();
+        }
+        
+        public bool Register(IXControl control)
         {
             if (Controls.Contains(control))
                 return false;
             Controls.Add(control);
             return true;
         }
-        public static bool Unregister(IXControl control)
+
+        public bool Unregister(IXControl control)
         {
             if (Controls.Contains(control))
             {
@@ -24,10 +32,13 @@ namespace XControls.Core
             return false;
         }
 
-        public static void UpdateAll()
+        public void UpdateAll()
         {
             foreach (var control in Controls)
                 control.Update();
         }
+
+
+        public static ControlRegistry DefaultControlRegistry { get; private set; } = new();
     }
 }

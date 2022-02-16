@@ -12,7 +12,7 @@ namespace XControls.Controls
     {
         public XButton()
         {
-            ControlRegistry.Register(this);
+            ControlRegistry.DefaultControlRegistry.Register(this);
             Style = (Style)FindResource("XBUTTON");
 
             MouseEnter += XOnMouseEnter;
